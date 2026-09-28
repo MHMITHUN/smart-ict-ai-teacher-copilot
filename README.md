@@ -300,6 +300,10 @@ Password for every account: `Demo@12345`
   class); there is no student-facing mode and no CSV import of real marks.
 - **No student accounts.** Deliberate (spec 11): this is a teacher tool;
   students receive printed/approved artifacts, not logins.
+- **Login throttling is in-memory and per-instance.** Login attempts are
+  limited to 10 per email address per 10-minute window, but the counter
+  lives in server memory: each serverless/multi-instance server enforces
+  its own independent limit, and counters reset on restart.
 - Demo mode resets on server restart (in-memory store) and there is no
   artifact version history beyond updated-by auditing.
 - Bangla-language content generation works through the quiz language field,

@@ -5,7 +5,14 @@ import { z } from "zod";
 import { verifyPassword } from "@/lib/auth/password";
 import { clearSessionCookie, createSessionToken, setSessionCookie } from "@/lib/auth/session";
 import { getStore } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 import { loginSchema } from "@/lib/validation/auth";
+
+/** Login throttling: max attempts per email per fixed window. */
+const LOGIN_LIMIT = {
+  max: 10,
+  windowMs: 10 * 60 * 1000, // 10 minutes
+} as const;
 
 export interface AuthFormState {
   error?: string;
@@ -46,6 +53,21 @@ export async function loginAction(
   }
 
   const { email, password } = parsed.data;
+
+  // Throttle by normalized email before touching the user store. The
+  // counter is in-memory and per-instance (see src/lib/rate-limit.ts).
+  const throttle = rateLimit(
+    `login:${email.trim().toLowerCase()}`,
+    LOGIN_LIMIT.max,
+    LOGIN_LIMIT.windowMs,
+  );
+  if (!throttle.ok) {
+    const minutes = Math.max(1, Math.ceil(throttle.retryAfterSec / 60));
+    return {
+      error: `Too many attempts - try again in ${minutes} minute${minutes === 1 ? "" : "s"}.`,
+    };
+  }
+
   const store = await getStore();
   const user = await store.getUserByEmail(email);
   if (!user || !verifyPassword(password, user.passwordHash)) {
