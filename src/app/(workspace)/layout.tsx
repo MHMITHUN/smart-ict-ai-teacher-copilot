@@ -1,6 +1,5 @@
 import { requireRole } from "@/lib/auth/guards";
 import { getProviderInfo } from "@/lib/ai/provider";
-import { DemoBanner } from "@/components/layout/DemoBanner";
 import { WorkspaceSidebar } from "@/components/layout/WorkspaceSidebar";
 
 /**
@@ -29,7 +28,6 @@ export default async function WorkspaceLayout({
     <div className="min-h-screen">
       <WorkspaceSidebar user={publicUser} provider={provider} />
       <div className="flex min-h-screen flex-col lg:pl-64">
-        <DemoBanner />
         <main className="flex-1">
           <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:py-8">
             {children}

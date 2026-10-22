@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Sparkles } from "lucide-react";
 import { getProviderInfo } from "@/lib/ai/provider";
-import { DemoBanner } from "@/components/layout/DemoBanner";
 import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = {
@@ -22,7 +21,6 @@ export default async function LoginPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <DemoBanner />
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-4 py-12 sm:px-6">
         <div className="flex flex-col gap-3 text-center">
           <span className="mx-auto flex size-12 items-center justify-center rounded-xl bg-accent/10">
