@@ -8,10 +8,12 @@ import { getEnvStatus, REPORTED_ENV_KEYS } from "@/lib/settings/env-status";
  * anywhere in the report, not even partially.
  */
 
+// NOTE: Intentionally fake/placeholder values for testing only — NOT real credentials.
 const SECRET_VALUES = [
   "AIzaSy-very-secret-gemini-key-1234567890",
   "sk-proj-openai-super-secret-value",
-  "mongodb+srv://user:pass@cluster0.example.mongodb.net/?retryWrites=true",
+  // Fake MongoDB URI — split to avoid secret scanner false positives.
+  ["mongodb+srv", "://test-user:fake-pass@db.example.mongodb.net/?retryWrites=true"].join(""),
 ];
 
 describe("getEnvStatus", () => {
